@@ -5,7 +5,7 @@ import ResetContent from "./ResetContent";
 
 const Login = () => {
   const [currentScreen, setCurrentScreen] = useState("login");
-  console.log(currentScreen);
+
   return currentScreen === "login" ? (
     <LoginContent setCurrentScreen={setCurrentScreen} />
   ) : currentScreen === "register" ? (
