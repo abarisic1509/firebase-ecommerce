@@ -10,7 +10,7 @@ import { auth, googleProvider } from "../../firebase/config";
 import { Loader } from "../../components";
 import { useNavigate } from "react-router-dom";
 
-const LoginContent = ({ setCurrentScreen }) => {
+const LoginContent = ({ setCurrentScreen, setIsLoggedIn }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,6 +26,7 @@ const LoginContent = ({ setCurrentScreen }) => {
         // Signed in
         const user = userCredential.user;
         console.log(user);
+        setIsLoggedIn(true);
         setLoading(false);
         navigate("/");
       })
@@ -43,6 +44,7 @@ const LoginContent = ({ setCurrentScreen }) => {
       .then((result) => {
         const user = result.user;
         console.log(user);
+        setIsLoggedIn(true);
         setLoading(false);
         navigate("/");
       })

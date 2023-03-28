@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import styles from "./Header.module.scss";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase/config";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const logo = (
   <div className={styles.logo}>
@@ -14,9 +18,11 @@ const logo = (
   </div>
 );
 
-const Header = () => {
+const Header = ({ isLoggedIn, setIsLoggedIn }) => {
   const [cartMenuOpen, setCartMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const toggleCartMenu = () => {
     setCartMenuOpen(!cartMenuOpen);
@@ -33,8 +39,20 @@ const Header = () => {
   const hideMobileMenu = () => {
     setMobileMenuOpen(false);
   };
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        toast.success("Logout sucessfull");
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.message);
+      });
+  };
   return (
     <header>
+      <ToastContainer />
       <div className={styles.header}>
         {logo}
         <nav
@@ -76,14 +94,18 @@ const Header = () => {
             <li className={styles["header-right"]}>
               <ul>
                 <li>
-                  <NavLink
-                    to="/login"
-                    className={({ isActive }) =>
-                      isActive ? `${styles.active}` : ""
-                    }
-                  >
-                    Login
-                  </NavLink>
+                  {!isLoggedIn ? (
+                    <NavLink
+                      to="/login"
+                      className={({ isActive }) =>
+                        isActive ? `${styles.active}` : ""
+                      }
+                    >
+                      Login
+                    </NavLink>
+                  ) : (
+                    <button onClick={handleLogout}>Logout</button>
+                  )}
                 </li>
                 <li className={styles["cart-menu"]}>
                   <button

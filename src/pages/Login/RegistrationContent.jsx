@@ -8,7 +8,7 @@ import { auth } from "../../firebase/config";
 import { Loader } from "../../components";
 import { useNavigate } from "react-router-dom";
 
-const RegistrationContent = ({ setCurrentScreen }) => {
+const RegistrationContent = ({ setCurrentScreen, setIsLoggedIn }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -29,6 +29,7 @@ const RegistrationContent = ({ setCurrentScreen }) => {
         // Signed in
         const user = userCredential.user;
         console.log(user);
+        setIsLoggedIn(true);
         setLoading(false);
         toast.success("Registration successfull");
         navigate("/");

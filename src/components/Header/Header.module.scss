@@ -49,7 +49,10 @@ header {
 
       li {
         margin: 0 5px;
-        a {
+        a,
+        button {
+          font-family: inherit;
+          cursor: pointer;
           color: #fff;
           &:hover {
             color: orangered;
