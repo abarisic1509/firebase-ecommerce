@@ -1,0 +1,81 @@
+.auth {
+  min-height: calc(100svh - 160px);
+  min-height: calc(100vh - 160px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .img {
+    animation: slide-down 0.5s ease;
+  }
+
+  .form {
+    width: 35rem;
+    padding: 1.5rem;
+    animation: slide-up 0.5s ease;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    h2 {
+      color: var(--color-danger);
+      text-align: center;
+    }
+    form {
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        display: block;
+        font-size: 1.6rem;
+        font-weight: 300;
+        padding: 1rem;
+        margin: 1rem auto 0;
+        width: 100%;
+        border: 1px solid #777;
+        border-radius: 3px;
+        outline: none;
+      }
+
+      p {
+        text-align: right;
+        margin: 1rem;
+        margin-top: 0.25rem;
+      }
+    }
+    .register {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 1rem;
+    }
+  }
+
+  @keyframes slide-up {
+    0% {
+      transform: translateY(-5rem);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  @keyframes slide-down {
+    0% {
+      transform: translateY(5rem);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+}
+// .card {
+//   border: 1px solid transparent;
+//   border-radius: 5px;
+//   box-shadow: var(--box-shadow);
+//   overflow: hidden;
+// }
+
+@media screen and (max-width: 700px) {
+  .img {
+    display: none;
+  }
+}
