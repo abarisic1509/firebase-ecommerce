@@ -44,6 +44,7 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
       .then(() => {
         toast.success("Logout sucessfull");
         navigate("/login");
+        setIsLoggedIn(false);
       })
       .catch((error) => {
         console.log(error);
@@ -93,20 +94,6 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
             </li>
             <li className={styles["header-right"]}>
               <ul>
-                <li>
-                  {!isLoggedIn ? (
-                    <NavLink
-                      to="/login"
-                      className={({ isActive }) =>
-                        isActive ? `${styles.active}` : ""
-                      }
-                    >
-                      Login
-                    </NavLink>
-                  ) : (
-                    <button onClick={handleLogout}>Logout</button>
-                  )}
-                </li>
                 <li className={styles["cart-menu"]}>
                   <button
                     className={styles["cart-menu_btn"]}
@@ -147,6 +134,32 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
                   </div>
                 </li>
               </ul>
+            </li>
+            {isLoggedIn && (
+              <li>
+                <NavLink
+                  to="/profile"
+                  className={({ isActive }) =>
+                    isActive ? `${styles.active}` : ""
+                  }
+                >
+                  My profile
+                </NavLink>
+              </li>
+            )}
+            <li>
+              {!isLoggedIn ? (
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    isActive ? `${styles.active}` : ""
+                  }
+                >
+                  Login
+                </NavLink>
+              ) : (
+                <button onClick={handleLogout}>Logout</button>
+              )}
             </li>
           </ul>
         </nav>

@@ -3,12 +3,13 @@ import styles from "./Login.module.scss";
 import regImg from "../../assets/register.png";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../firebase/config";
 import { Loader } from "../../components";
 import { useNavigate } from "react-router-dom";
 
 const RegistrationContent = ({ setCurrentScreen, setIsLoggedIn }) => {
+  const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -28,11 +29,21 @@ const RegistrationContent = ({ setCurrentScreen, setIsLoggedIn }) => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        console.log(user);
-        setIsLoggedIn(true);
+        console.log(auth.currentUser);
+        updateProfile(user, {
+          displayName: displayName,
+        })
+          .then(() => {
+            setIsLoggedIn(true);
+            setLoading(false);
+            toast.success("Registration successfull");
+            navigate("/");
+          })
+          .catch((error) => {
+            toast.error(error.message);
+            setLoading(false);
+          });
         setLoading(false);
-        toast.success("Registration successfull");
-        navigate("/");
       })
       .catch((error) => {
         toast.error(error.message);
@@ -45,6 +56,13 @@ const RegistrationContent = ({ setCurrentScreen, setIsLoggedIn }) => {
       <div className={styles.form}>
         <h2>Register</h2>
         <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Full name"
+            required
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+          />
           <input
             type="email"
             placeholder="Email"
