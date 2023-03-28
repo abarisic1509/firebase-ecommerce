@@ -91,6 +91,7 @@ const LoginContent = ({ setCurrentScreen }) => {
             Login
           </button>
         </form>
+        <ToastContainer />
         <p style={{ marginBlock: "1.5rem" }}>
           Don't have an account?{" "}
           <button
