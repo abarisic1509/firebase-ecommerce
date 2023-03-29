@@ -27,6 +27,7 @@ const Header = () => {
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const userName = useSelector((state) => state.auth.userName);
+  const userEmail = useSelector((state) => state.auth.userEmail);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -111,6 +112,13 @@ const Header = () => {
                     Contact
                   </NavLink>
                 </li>
+                {isLoggedIn && userEmail === "tm513093@gmail.com" && (
+                  <li>
+                    <Link to="admin/dashboard" className="--btn --btn-primary">
+                      Admin
+                    </Link>
+                  </li>
+                )}
               </ul>
             </li>
             <li className={styles["header-right"]}>
@@ -121,7 +129,7 @@ const Header = () => {
                   onMouseLeave={hideDropdownMenu}
                 >
                   <button
-                    className={`dropdown-btn ${styles["Dropdown-menu_btn"]}`}
+                    className={`dropdown-btn ${styles["cart-menu_btn"]}`}
                     onClick={() => {
                       if (dropdownHovered !== "cart") {
                         setDropdownHovered("cart");
@@ -167,7 +175,7 @@ const Header = () => {
                   </div>
                 </li>
                 {!isLoggedIn ? (
-                  <li>
+                  <li style={{ marginBlock: "auto" }}>
                     <NavLink
                       to="/login"
                       className={({ isActive }) =>

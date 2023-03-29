@@ -267,7 +267,7 @@ header {
 
 .active {
   position: relative;
-  color: orangered;
+  color: orangered !important;
 }
 
 .active::after {

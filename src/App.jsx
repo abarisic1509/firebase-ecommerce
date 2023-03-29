@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase/config";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import "./App.scss";
 import { Footer, Header } from "./components";
@@ -11,6 +11,7 @@ import { removeActiveUser, setActiveUser } from "./redux/features/authSlice";
 
 function App() {
   const dispatch = useDispatch();
+  const userEmail = useSelector((state) => state.auth.userEmail);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -36,7 +37,10 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route
+          path="/admin/*"
+          element={userEmail === "tm513093@gmail.com" && <Admin />}
+        />
         <Route path="/login" element={<Login />} />
       </Routes>
       <Footer />
