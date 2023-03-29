@@ -3,19 +3,13 @@ import LoginContent from "./LoginContent";
 import RegistrationContent from "./RegistrationContent";
 import ResetContent from "./ResetContent";
 
-const Login = ({ setIsLoggedIn }) => {
+const Login = () => {
   const [currentScreen, setCurrentScreen] = useState("login");
 
   return currentScreen === "login" ? (
-    <LoginContent
-      setCurrentScreen={setCurrentScreen}
-      setIsLoggedIn={setIsLoggedIn}
-    />
+    <LoginContent setCurrentScreen={setCurrentScreen} />
   ) : currentScreen === "register" ? (
-    <RegistrationContent
-      setCurrentScreen={setCurrentScreen}
-      setIsLoggedIn={setIsLoggedIn}
-    />
+    <RegistrationContent setCurrentScreen={setCurrentScreen} />
   ) : (
     <ResetContent setCurrentScreen={setCurrentScreen} />
   );

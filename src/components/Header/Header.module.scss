@@ -40,6 +40,7 @@ header {
     ul {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       list-style: none;
       width: 100%;
 
@@ -64,28 +65,13 @@ header {
 
   .header-right ul {
     display: flex;
+    gap: 1rem;
   }
-  .cart-menu {
-    position: relative;
-  }
+
   .cart-menu_btn {
     width: 2.5rem;
     height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: transparent;
-    outline: none;
-    border: none;
-    color: #fff;
     position: relative;
-    cursor: pointer;
-    &:hover {
-      color: orangered;
-    }
-    // &.active {
-    //   color: var(--color-danger);
-    // }
     p {
       position: absolute;
       top: -0.7rem;
@@ -104,36 +90,6 @@ header {
     }
   }
   .cart-menu_menu {
-    position: absolute;
-    right: 0;
-    top: 40px;
-    min-width: 200px;
-    background-color: #fff;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
-    padding: 1rem 0.5rem 0;
-    height: 0;
-    opacity: 0;
-    transition: all 0.25s linear;
-
-    &::before {
-      content: "";
-      position: absolute;
-      top: -5px;
-      right: 0;
-      width: 0;
-      height: 0;
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-
-      border-bottom: 5px solid white;
-    }
-
-    ul {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
     li {
       display: grid;
       grid-template-columns: 1fr auto auto;
@@ -165,30 +121,22 @@ header {
         background-color: #fff;
       }
     }
-
-    // span {
-    //   margin: 0 5px;
-
-    //   p {
-    //     color: #fff;
-    //   }
-    // }
-
-    // .links a {
-    //   margin: 0 5px;
-    //   color: #fff;
-    //   &:hover {
-    //     color: orangered;
-    //   }
-    //   &.active {
-    //     color: var(--color-danger);
-    //   }
-    // }
   }
-  .show-cart-menu {
-    height: auto;
-    opacity: 1;
+
+  .profile-menu_btn {
+    flex-direction: column;
   }
+  .profile-menu_menu {
+    right: 1rem !important;
+    ul {
+      padding-bottom: 1rem;
+    }
+    a,
+    button {
+      color: #333;
+    }
+  }
+
   .mobile-menu-options {
     display: none;
   }

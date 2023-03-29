@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import styles from "./Header.module.scss";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
-import { HiOutlineMenuAlt3 } from "react-icons/hi";
+import { HiOutlineMenuAlt3, HiOutlineUserCircle } from "react-icons/hi";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/config";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch, useSelector } from "react-redux";
+import { removeActiveUser } from "../../redux/features/authSlice";
 
 const logo = (
   <div className={styles.logo}>
@@ -18,11 +20,14 @@ const logo = (
   </div>
 );
 
-const Header = ({ isLoggedIn, setIsLoggedIn }) => {
+const Header = () => {
   const [cartMenuOpen, setCartMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const userName = useSelector((state) => state.auth.userName);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const toggleCartMenu = () => {
     setCartMenuOpen(!cartMenuOpen);
@@ -44,13 +49,14 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
       .then(() => {
         toast.success("Logout sucessfull");
         navigate("/login");
-        setIsLoggedIn(false);
+        dispatch(removeActiveUser());
       })
       .catch((error) => {
         console.log(error);
         toast.error(error.message);
       });
   };
+  console.log(userName);
   return (
     <header>
       <ToastContainer />
@@ -94,9 +100,9 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
             </li>
             <li className={styles["header-right"]}>
               <ul>
-                <li className={styles["cart-menu"]}>
+                <li className="dropdown-wrapper">
                   <button
-                    className={styles["cart-menu_btn"]}
+                    className={`dropdown-btn ${styles["cart-menu_btn"]}`}
                     onMouseEnter={showCartMenu}
                     onMouseLeave={hideCartMenu}
                   >
@@ -107,8 +113,8 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
                   <div
                     className={
                       cartMenuOpen
-                        ? `${styles["cart-menu_menu"]} ${styles["show-cart-menu"]}`
-                        : styles["cart-menu_menu"]
+                        ? `dropdown-menu ${styles["cart-menu_menu"]} dropdown-menu-show`
+                        : `dropdown-menu ${styles["cart-menu_menu"]}`
                     }
                   >
                     <ul>
@@ -133,33 +139,49 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
                     <Link to="/cart">Go to cart</Link>
                   </div>
                 </li>
+                {!isLoggedIn ? (
+                  <li>
+                    <NavLink
+                      to="/login"
+                      className={({ isActive }) =>
+                        isActive ? `${styles.active}` : ""
+                      }
+                    >
+                      Login
+                    </NavLink>
+                  </li>
+                ) : (
+                  <li className="dropdown-wrapper">
+                    <button
+                      className={`dropdown-btn ${styles["profile-menu_btn"]}`}
+                      onMouseEnter={showCartMenu}
+                      onMouseLeave={hideCartMenu}
+                    >
+                      <HiOutlineUserCircle size={32} />
+                      {userName}
+                    </button>
+                    <div
+                      className={
+                        cartMenuOpen
+                          ? `dropdown-menu ${styles["profile-menu_menu"]} dropdown-menu-show`
+                          : `dropdown-menu ${styles["profile-menu_menu"]}`
+                      }
+                    >
+                      <ul>
+                        <li>
+                          <Link to={"/orders"}>My orders</Link>
+                        </li>
+                        <li>
+                          <Link to={"/cart"}>My cart</Link>
+                        </li>
+                        <li>
+                          <button onClick={handleLogout}>Logout</button>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                )}
               </ul>
-            </li>
-            {isLoggedIn && (
-              <li>
-                <NavLink
-                  to="/profile"
-                  className={({ isActive }) =>
-                    isActive ? `${styles.active}` : ""
-                  }
-                >
-                  My profile
-                </NavLink>
-              </li>
-            )}
-            <li>
-              {!isLoggedIn ? (
-                <NavLink
-                  to="/login"
-                  className={({ isActive }) =>
-                    isActive ? `${styles.active}` : ""
-                  }
-                >
-                  Login
-                </NavLink>
-              ) : (
-                <button onClick={handleLogout}>Logout</button>
-              )}
             </li>
           </ul>
         </nav>
