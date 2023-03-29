@@ -91,6 +91,7 @@ header {
   }
   .cart-menu_menu {
     li {
+      width: 100%;
       display: grid;
       grid-template-columns: 1fr auto auto;
       gap: 1.5rem;
@@ -127,7 +128,8 @@ header {
     flex-direction: column;
   }
   .profile-menu_menu {
-    right: 1rem !important;
+    right: 0.75rem !important;
+    min-width: 100px !important;
     ul {
       padding-bottom: 1rem;
     }
@@ -194,60 +196,60 @@ header {
         }
       }
       .cart-menu {
-        display: none;
+        display: none !important;
       }
 
-      .header-right ul {
-        display: block;
-        .cart {
-          // display: block;
-          // padding: 5px 0;
-          border-bottom: 1px solid #333;
-          // a {
-          //   position: relative;
-          //   p {
-          //     position: absolute;
-          //     top: -1rem;
-          //     left: 5rem;
-          //     font-weight: 500;
-          //   }
-          // }
+      .header-right {
+        display: none;
+      }
+    }
+    .mobile-menu-options {
+      display: block;
+      ul {
+        display: flex;
+        gap: 1.5rem;
+        list-style: none;
+        align-items: flex-start;
+
+        a,
+        button {
+          color: #fff;
         }
 
-        .links {
-          display: block;
-          a {
-            display: block;
-            margin: 0;
-            padding: 5px 0;
-            border-bottom: 1px solid #333;
+        .cart-menu_btn {
+          margin-top: 0.5rem;
+        }
+        .profile-menu_menu {
+          ul {
+            align-items: center;
+          }
+          a,
+          button {
+            color: #333;
+            text-align: center;
           }
         }
       }
     }
-    .mobile-menu-options {
-      display: flex;
-      gap: 1.5rem;
-    }
-    .cart {
-      display: block;
-      padding: 5px 0;
-      // border-bottom: 1px solid #333;
-      a {
-        color: #fff;
-        position: relative;
-        &:hover {
-          color: orangered;
-        }
-        p {
-          position: absolute;
-          top: -1rem;
-          left: 5rem;
-          font-weight: 500;
-          color: #fff;
-        }
-      }
-    }
+    // .cart {
+    //   display: block;
+    //   padding: 5px 0;
+    //   // border-bottom: 1px solid #333;
+    //   a {
+    //     color: #fff;
+    //     position: relative;
+    //     &:hover {
+    //       color: orangered;
+    //     }
+    //     p {
+    //       position: absolute;
+    //       top: -1rem;
+    //       left: 5rem;
+    //       font-weight: 500;
+    //       color: #fff;
+    //     }
+    //   }
+    // }
     .show-nav {
       transform: translateX(0);
     }

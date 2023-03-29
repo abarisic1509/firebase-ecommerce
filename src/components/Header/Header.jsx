@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Header.module.scss";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
@@ -21,28 +21,43 @@ const logo = (
 );
 
 const Header = () => {
-  const [cartMenuOpen, setCartMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dropdownHovered, setDropdownHovered] = useState("");
+  const [isMouseHovering, setIsMouseHovering] = useState(false);
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const userName = useSelector((state) => state.auth.userName);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const toggleCartMenu = () => {
-    setCartMenuOpen(!cartMenuOpen);
+  useEffect(() => {
+    if (!isMouseHovering) {
+      // Start the timer to close the dropdown only when the mouse is not hovering
+      const timer = setTimeout(() => {
+        setDropdownHovered("");
+      }, 100);
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [isMouseHovering]);
+  const showDropdownMenu = (id) => {
+    setIsMouseHovering(true);
+    setDropdownHovered(id);
   };
-  const showCartMenu = () => {
-    setCartMenuOpen(true);
-  };
-  const hideCartMenu = () => {
-    setCartMenuOpen(false);
+  const hideDropdownMenu = () => {
+    setIsMouseHovering(false);
   };
   const toggleMobiletMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
   const hideMobileMenu = () => {
     setMobileMenuOpen(false);
+  };
+  const handleClickOnLink = () => {
+    setIsMouseHovering(false);
+    setDropdownHovered("");
   };
   const handleLogout = () => {
     signOut(auth)
@@ -100,11 +115,20 @@ const Header = () => {
             </li>
             <li className={styles["header-right"]}>
               <ul>
-                <li className="dropdown-wrapper">
+                <li
+                  className="dropdown-wrapper"
+                  onMouseEnter={() => showDropdownMenu("cart")}
+                  onMouseLeave={hideDropdownMenu}
+                >
                   <button
-                    className={`dropdown-btn ${styles["cart-menu_btn"]}`}
-                    onMouseEnter={showCartMenu}
-                    onMouseLeave={hideCartMenu}
+                    className={`dropdown-btn ${styles["Dropdown-menu_btn"]}`}
+                    onClick={() => {
+                      if (dropdownHovered !== "cart") {
+                        setDropdownHovered("cart");
+                      } else {
+                        setDropdownHovered("");
+                      }
+                    }}
                   >
                     <FaShoppingCart size={32} />
 
@@ -112,10 +136,11 @@ const Header = () => {
                   </button>
                   <div
                     className={
-                      cartMenuOpen
+                      dropdownHovered === "cart"
                         ? `dropdown-menu ${styles["cart-menu_menu"]} dropdown-menu-show`
                         : `dropdown-menu ${styles["cart-menu_menu"]}`
                     }
+                    onMouseLeave={hideDropdownMenu}
                   >
                     <ul>
                       <li>
@@ -136,7 +161,9 @@ const Header = () => {
                         <p>30,00€</p>
                       </li>
                     </ul>
-                    <Link to="/cart">Go to cart</Link>
+                    <Link to="/cart" onClick={handleClickOnLink}>
+                      Go to cart
+                    </Link>
                   </div>
                 </li>
                 {!isLoggedIn ? (
@@ -151,23 +178,33 @@ const Header = () => {
                     </NavLink>
                   </li>
                 ) : (
-                  <li className="dropdown-wrapper">
+                  <li
+                    className="dropdown-wrapper"
+                    onMouseEnter={() => showDropdownMenu("profile")}
+                    onMouseLeave={hideDropdownMenu}
+                  >
                     <button
                       className={`dropdown-btn ${styles["profile-menu_btn"]}`}
-                      onMouseEnter={showCartMenu}
-                      onMouseLeave={hideCartMenu}
+                      onClick={() => {
+                        if (dropdownHovered !== "profile") {
+                          setDropdownHovered("profile");
+                        } else {
+                          setDropdownHovered("");
+                        }
+                      }}
                     >
                       <HiOutlineUserCircle size={32} />
                       {userName}
                     </button>
                     <div
                       className={
-                        cartMenuOpen
+                        dropdownHovered === "profile"
                           ? `dropdown-menu ${styles["profile-menu_menu"]} dropdown-menu-show`
                           : `dropdown-menu ${styles["profile-menu_menu"]}`
                       }
+                      onMouseLeave={hideDropdownMenu}
                     >
-                      <ul>
+                      <ul onClick={handleClickOnLink}>
                         <li>
                           <Link to={"/orders"}>My orders</Link>
                         </li>
@@ -186,45 +223,114 @@ const Header = () => {
           </ul>
         </nav>
         <div className={styles["mobile-menu-options"]}>
-          <div className={styles["cart-menu"]} onClick={toggleCartMenu}>
-            <button className={styles["cart-menu_btn"]}>
-              <FaShoppingCart size={32} />
-
-              <p>0</p>
-            </button>
-            <div
-              className={
-                cartMenuOpen
-                  ? `${styles["cart-menu_menu"]} ${styles["show-cart-menu"]}`
-                  : styles["cart-menu_menu"]
-              }
+          <ul>
+            <li
+              className="dropdown-wrapper"
+              onMouseEnter={() => showDropdownMenu("cart")}
+              onMouseLeave={hideDropdownMenu}
             >
-              <ul>
-                <li>
-                  <h3>Item title</h3>
-                  <p>x2</p>
-                  <p>30,00€</p>
-                </li>
-                <li>
-                  <h3>A bit longer item title</h3>
-                  <p>x2</p>
-                  <p>30,00€</p>
-                </li>
-                <li>
-                  <h3>Very, very, very long item title with lots of chars</h3>
-                  <p>x2</p>
-                  <p>30,00€</p>
-                </li>
-              </ul>
-              <Link to="/cart">Go to cart</Link>
-            </div>
-          </div>
-          <button
-            className={styles["cart-menu_btn"]}
-            onClick={toggleMobiletMenu}
-          >
-            <HiOutlineMenuAlt3 size={32} color="#fff" />
-          </button>
+              <button
+                className={`dropdown-btn ${styles["cart-menu_btn"]}`}
+                onClick={() => {
+                  if (dropdownHovered !== "cart") {
+                    setDropdownHovered("cart");
+                  } else {
+                    setDropdownHovered("");
+                  }
+                }}
+              >
+                <FaShoppingCart size={32} />
+
+                <p>0</p>
+              </button>
+              <div
+                className={
+                  dropdownHovered === "cart"
+                    ? `dropdown-menu ${styles["cart-menu_menu"]} dropdown-menu-show`
+                    : `dropdown-menu ${styles["cart-menu_menu"]}`
+                }
+                onMouseLeave={hideDropdownMenu}
+              >
+                <ul>
+                  <li>
+                    <h3>Item title</h3>
+                    <p>x2</p>
+                    <p>30,00€</p>
+                  </li>
+                  <li>
+                    <h3>A bit longer item title</h3>
+                    <p>x2</p>
+                    <p>30,00€</p>
+                  </li>
+                  <li>
+                    <h3>Very, very, very long item title with lots of chars</h3>
+                    <p>x2</p>
+                    <p>30,00€</p>
+                  </li>
+                </ul>
+                <Link to="/cart" onClick={handleClickOnLink}>
+                  Go to cart
+                </Link>
+              </div>
+            </li>
+            {!isLoggedIn ? (
+              <li>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    isActive ? `${styles.active}` : ""
+                  }
+                >
+                  Login
+                </NavLink>
+              </li>
+            ) : (
+              <li
+                className="dropdown-wrapper"
+                onMouseEnter={() => showDropdownMenu("profile")}
+                onMouseLeave={hideDropdownMenu}
+              >
+                <button
+                  className={`dropdown-btn ${styles["profile-menu_btn"]}`}
+                  onClick={() => {
+                    if (dropdownHovered !== "profile") {
+                      setDropdownHovered("profile");
+                    } else {
+                      setDropdownHovered("");
+                    }
+                  }}
+                >
+                  <HiOutlineUserCircle size={32} />
+                  {userName}
+                </button>
+                <div
+                  className={
+                    dropdownHovered === "profile"
+                      ? `dropdown-menu ${styles["profile-menu_menu"]} dropdown-menu-show`
+                      : `dropdown-menu ${styles["profile-menu_menu"]}`
+                  }
+                  onMouseLeave={hideDropdownMenu}
+                >
+                  <ul onClick={handleClickOnLink}>
+                    <li>
+                      <Link to={"/orders"}>My orders</Link>
+                    </li>
+                    <li>
+                      <Link to={"/cart"}>My cart</Link>
+                    </li>
+                    <li>
+                      <button onClick={handleLogout}>Logout</button>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            )}
+            <li>
+              <button className="dropdown-btn" onClick={toggleMobiletMenu}>
+                <HiOutlineMenuAlt3 size={32} color="#fff" />
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
     </header>

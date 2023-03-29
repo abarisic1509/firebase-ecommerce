@@ -461,12 +461,12 @@ button {
   background-color: #fff;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
   padding: 1rem 0.5rem 0;
-  height: 0;
+  display: none;
   opacity: 0;
   transition: all 0.25s linear;
 }
 .dropdown-wrapper .dropdown-menu.dropdown-menu-show {
-  height: auto;
+  display: block;
   opacity: 1;
 }
 .dropdown-wrapper .dropdown-menu::before {
