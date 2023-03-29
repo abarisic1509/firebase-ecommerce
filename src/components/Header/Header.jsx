@@ -114,7 +114,7 @@ const Header = () => {
                 </li>
                 {isLoggedIn && userEmail === "tm513093@gmail.com" && (
                   <li>
-                    <Link to="admin/dashboard" className="--btn --btn-primary">
+                    <Link to="/admin/dashboard" className="--btn --btn-primary">
                       Admin
                     </Link>
                   </li>

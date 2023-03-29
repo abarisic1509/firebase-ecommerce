@@ -5,7 +5,7 @@ import { auth } from "./firebase/config";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./App.scss";
-import { Footer, Header } from "./components";
+import { AdminOnlyRoute, Footer, Header } from "./components";
 import { Admin, Cart, Contact, Home, Login, Orders } from "./pages";
 import { removeActiveUser, setActiveUser } from "./redux/features/authSlice";
 
@@ -39,7 +39,12 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route
           path="/admin/*"
-          element={userEmail === "tm513093@gmail.com" && <Admin />}
+          element={
+            <AdminOnlyRoute>
+              {" "}
+              <Admin />
+            </AdminOnlyRoute>
+          }
         />
         <Route path="/login" element={<Login />} />
       </Routes>
