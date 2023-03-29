@@ -9,14 +9,12 @@ import SideNav from "./SideNav/SideNav";
 const Admin = () => {
   return (
     <div className={styles.admin}>
-      <aside className={styles.navbar}>
-        <SideNav />
-      </aside>
+      <SideNav />
       <main className={styles.content}>
         <Routes>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="products" element={<Products />} />
-          <Route path="orders" element={<Orders />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/orders" element={<Orders />} />
         </Routes>
       </main>
     </div>
