@@ -202,7 +202,7 @@ const Header = () => {
                       }}
                     >
                       <HiOutlineUserCircle size={32} />
-                      {userName}
+                      {/* {userName} */}
                     </button>
                     <div
                       className={
@@ -212,6 +212,24 @@ const Header = () => {
                       }
                       onMouseLeave={hideDropdownMenu}
                     >
+                      <div
+                        style={{
+                          display: "grid",
+                          justifyContent: "end",
+                          textAlign: "right",
+                          paddingBottom: "1rem",
+                          paddingLeft: "1rem",
+                          borderBottom: "1px solid #0c0c0c",
+                          color: "#333",
+                        }}
+                      >
+                        <h4 style={{ fontSize: "1.25rem" }}>
+                          Welcome, {userName}
+                        </h4>
+                        <p style={{ fontSize: ".875rem", opacity: ".7" }}>
+                          {userEmail}
+                        </p>
+                      </div>
                       <ul onClick={handleClickOnLink}>
                         <li>
                           <Link to={"/orders"}>My orders</Link>
