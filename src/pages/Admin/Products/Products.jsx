@@ -7,7 +7,7 @@ import {
   doc,
   deleteDoc,
 } from "firebase/firestore";
-import { AddProductModal, Loader } from "../../../components";
+import { Loader, ProductModal } from "../../../components";
 
 import styles from "./Products.module.scss";
 import { firestore, storage } from "../../../firebase/config";
@@ -20,8 +20,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { storeProduct } from "../../../redux/features/productSlice";
 
 const Products = () => {
-  //const [productsData, setProductsData] = useState([]);
   const [isModalActive, setIsModalActive] = useState(false);
+  const [modalAction, setModalAction] = useState("");
+  const [editingProductId, setEditingProductId] = useState("");
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
@@ -49,10 +50,10 @@ const Products = () => {
       const querySnapshot = await getDocs(q);
       const allProducts = querySnapshot.docs.map((doc) => {
         const data = doc.data();
-        const { createdAt, ...product } = data; // remove createdAt property
+        //const { createdAt, ...product } = data; // remove createdAt property
         return {
           id: doc.id,
-          ...product,
+          ...data,
         };
       });
       dispatch(storeProduct({ allProducts }));
@@ -100,6 +101,12 @@ const Products = () => {
     );
   };
 
+  const handleModal = (action, id) => {
+    setIsModalActive(true);
+    setModalAction(action);
+    setEditingProductId(id);
+  };
+
   console.log(productsData);
   return (
     <div className={styles.products}>
@@ -107,7 +114,7 @@ const Products = () => {
       <ToastContainer />
       <button
         className="--btn --btn-danger"
-        onClick={() => setIsModalActive(true)}
+        onClick={() => handleModal("add")}
         style={{ marginLeft: "auto" }}
       >
         Add new product
@@ -134,20 +141,16 @@ const Products = () => {
                 const { id, name, imgUrl, category, price } = product;
                 //console.log(id);
                 return (
-                  <tr key={product.id}>
+                  <tr key={id}>
                     <td>{index + 1}</td>
                     <td>
-                      <img
-                        src={product.imgUrl}
-                        alt={product.name}
-                        width="100"
-                      />
+                      <img src={imgUrl} alt={name} width="100" />
                     </td>
-                    <td>{product.name}</td>
-                    <td>{product.category}</td>
-                    <td>{`$${product.price}`}</td>
+                    <td>{name}</td>
+                    <td>{category}</td>
+                    <td>{`$${price}`}</td>
                     <td className={styles.icons}>
-                      <button>
+                      <button onClick={() => handleModal("edit", id)}>
                         <FaEdit size={20} color="green" />
                       </button>
                       &nbsp;
@@ -163,7 +166,14 @@ const Products = () => {
         )}
       </div>
 
-      {isModalActive && <AddProductModal setIsModalActive={setIsModalActive} />}
+      {isModalActive && (
+        <ProductModal
+          setIsModalActive={setIsModalActive}
+          modalAction={modalAction}
+          editingProductId={editingProductId}
+          getData={getData}
+        />
+      )}
     </div>
   );
 };

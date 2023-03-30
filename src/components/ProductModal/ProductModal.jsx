@@ -1,18 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   deleteObject,
   getDownloadURL,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { collection, addDoc, Timestamp, setDoc, doc } from "firebase/firestore";
 import { firestore, storage } from "../../firebase/config";
 
 import spinner from "../../assets/spinner.jpg";
-import styles from "./AddProductModal.module.scss";
+import styles from "./ProductModal.module.scss";
 import { HiOutlineXCircle } from "react-icons/hi";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
 
 const categories = [
   {
@@ -34,32 +35,53 @@ const categories = [
 ];
 
 const productObj = {
-  productName: "",
-  productImgUrl: "",
-  productPrice: "",
-  productCategory: "",
-  productBrand: "",
-  productDescription: "",
+  name: "",
+  imgUrl: "",
+  price: "",
+  category: "",
+  brand: "",
+  description: "",
 };
 
-const AddProductModal = ({ setIsModalActive }) => {
-  const [product, setProduct] = useState({
-    ...productObj,
-  });
+const ProductModal = ({
+  setIsModalActive,
+  modalAction,
+  editingProductId,
+  getData,
+}) => {
+  const productsData = useSelector((state) => state.product.products);
+
+  const [product, setProduct] = useState({ ...productObj });
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedImg, setUploadedImg] = useState(null);
   const [loading, setLoading] = useState(false);
+  const productEdit = productsData.find((item) => item.id === editingProductId);
+  useEffect(() => {
+    if (modalAction === "edit") {
+      setProduct({
+        ...productEdit,
+      });
+    } else {
+      setProduct({
+        ...productObj,
+      });
+    }
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProduct((prev) => ({ ...prev, [name]: value }));
   };
   const handleImageChange = (e) => {
+    if (product.imgUrl !== "") {
+      const storageRef = ref(storage, product.imgUrl);
+      deleteObject(storageRef);
+    }
+
     const file = e.target.files[0];
 
     const imgRef = ref(storage, `eCommerce/${file.name}_${Date.now()}`);
     const uploadTask = uploadBytesResumable(imgRef, file);
-    console.log(imgRef);
 
     uploadTask.on(
       "state_changed",
@@ -73,7 +95,7 @@ const AddProductModal = ({ setIsModalActive }) => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setProduct((prev) => ({ ...prev, productImgUrl: downloadURL }));
+          setProduct((prev) => ({ ...prev, imgUrl: downloadURL }));
           toast.success("Upload successful");
           setUploadedImg(imgRef);
         });
@@ -86,17 +108,18 @@ const AddProductModal = ({ setIsModalActive }) => {
     setLoading(true);
     try {
       const docRef = await addDoc(collection(firestore, "products"), {
-        name: product.productName,
-        imgUrl: product.productImgUrl,
-        price: Number(product.productPrice),
-        category: product.productCategory,
-        brand: product.productBrand,
-        description: product.productDescription,
-        createdAt: Timestamp.now().toDate(),
+        name: product.name,
+        imgUrl: product.imgUrl,
+        price: Number(product.price),
+        category: product.category,
+        brand: product.brand,
+        description: product.description,
+        createdAt: new Date().toString(),
       });
       setProduct({
         ...productObj,
       });
+      getData();
       setLoading(false);
       setUploadProgress(0);
       setIsModalActive(false);
@@ -105,9 +128,43 @@ const AddProductModal = ({ setIsModalActive }) => {
       toast.error(err.message);
     }
   };
+  const editProduct = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    if (product.imgUrl !== productEdit.imgUrl) {
+      const storageRef = ref(storage, productEdit.imgUrl);
+      deleteObject(storageRef);
+    }
+    try {
+      setDoc(doc(firestore, "products", editingProductId), {
+        name: product.name,
+        imgUrl: product.imgUrl,
+        price: Number(product.price),
+        category: product.category,
+        brand: product.brand,
+        description: product.description,
+        createdAt: product.createdAt,
+        editedAt: new Date().toString(),
+      });
+
+      setProduct({
+        ...productObj,
+      });
+      getData();
+      setLoading(false);
+      setUploadProgress(0);
+      setIsModalActive(false);
+      toast.success("Product successfuly edited");
+    } catch (err) {
+      setLoading(false);
+      toast.error(err.message);
+    }
+  };
+
+  console.log(product);
 
   const handleCancel = () => {
-    if (uploadedImg) {
+    if (modalAction === "add" && uploadedImg) {
       deleteObject(uploadedImg)
         .then(() => {
           toast.info("Image deleted");
@@ -122,29 +179,31 @@ const AddProductModal = ({ setIsModalActive }) => {
     setIsModalActive(false);
     setLoading(false);
     setUploadProgress(0);
-    toast.info("Product adding canceled");
   };
 
-  console.log(product);
   return (
     <div role="dialog" className={styles.product}>
       <ToastContainer />
       <div className={styles.overlay}></div>
       <div className={styles.card}>
         <div className={styles["modal-header"]}>
-          <h3>Add new product</h3>
+          <h3>{modalAction === "add" ? "Add new product" : "Edit product"}</h3>
           <button className="--btn" onClick={handleCancel}>
             <HiOutlineXCircle size={40} color="#333" />
           </button>
         </div>
-        <form onSubmit={(e) => addProduct(e)}>
+        <form
+          onSubmit={
+            modalAction === "add" ? (e) => addProduct(e) : (e) => editProduct(e)
+          }
+        >
           <fieldset>
-            <label htmlFor="productName">Product name</label>
+            <label htmlFor="name">Product name</label>
             <input
               type="text"
-              name="productName"
-              id="productName"
-              value={product.productName}
+              name="name"
+              id="name"
+              value={product.name}
               onChange={(e) => handleInputChange(e)}
               required
             />
@@ -168,14 +227,14 @@ const AddProductModal = ({ setIsModalActive }) => {
                 id="productImg"
                 onChange={(e) => handleImageChange(e)}
               />
-              {product.productImgUrl !== "" && (
+              {product.imgUrl !== "" && (
                 <input
                   type="text"
-                  name="productImgUrl"
-                  id="productImgUrl"
+                  name="imgUrl"
+                  id="imgUrl"
                   placeholder="Image URL"
                   disabled
-                  value={product.productImgUrl}
+                  value={product.imgUrl}
                   onChange={(e) => handleInputChange(e)}
                   required
                 />
@@ -183,22 +242,22 @@ const AddProductModal = ({ setIsModalActive }) => {
             </div>
           </fieldset>
           <fieldset>
-            <label htmlFor="productPrice">Product price</label>
+            <label htmlFor="price">Product price</label>
             <input
               type="number"
-              name="productPrice"
-              id="productPrice"
-              value={product.productPrice}
+              name="price"
+              id="price"
+              value={product.price}
               onChange={(e) => handleInputChange(e)}
               required
             />
           </fieldset>
           <fieldset>
-            <label htmlFor="productCategory">Product category</label>
+            <label htmlFor="category">Product category</label>
             <select
-              name="productCategory"
-              id="productCategory"
-              value={product.productCategory}
+              name="category"
+              id="category"
+              value={product.category}
               onChange={(e) => handleInputChange(e)}
               required
             >
@@ -211,24 +270,24 @@ const AddProductModal = ({ setIsModalActive }) => {
             </select>
           </fieldset>
           <fieldset>
-            <label htmlFor="productBrand">Product brand</label>
+            <label htmlFor="brand">Product brand</label>
             <input
               type="text"
-              name="productBrand"
-              id="productBrand"
-              value={product.productBrand}
+              name="brand"
+              id="brand"
+              value={product.brand}
               onChange={(e) => handleInputChange(e)}
               required
             />
           </fieldset>
           <fieldset>
-            <label htmlFor="productDescription">Product description</label>
+            <label htmlFor="description">Product description</label>
             <textarea
-              name="productDescription"
-              id="productDescription"
+              name="description"
+              id="description"
               cols="30"
               rows="10"
-              value={product.productDescription}
+              value={product.description}
               onChange={(e) => handleInputChange(e)}
               required
             ></textarea>
@@ -246,4 +305,4 @@ const AddProductModal = ({ setIsModalActive }) => {
   );
 };
 
-export default AddProductModal;
+export default ProductModal;
