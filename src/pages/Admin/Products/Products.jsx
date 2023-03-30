@@ -112,16 +112,26 @@ const Products = () => {
     <div className={styles.products}>
       {loading && <Loader />}
       <ToastContainer />
-      <button
-        className="--btn --btn-danger"
-        onClick={() => handleModal("add")}
-        style={{ marginLeft: "auto" }}
-      >
-        Add new product
-      </button>
 
       <div className={styles.table}>
-        <h2>All products</h2>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "1.5rem",
+            paddingBottom: "2rem",
+          }}
+        >
+          <h2>All products</h2>
+          <button
+            className="--btn --btn-danger"
+            onClick={() => handleModal("add")}
+            style={{ marginLeft: "auto" }}
+          >
+            Add new product
+          </button>
+        </div>
         {productsData.length === 0 ? (
           <p>No products found.</p>
         ) : (
