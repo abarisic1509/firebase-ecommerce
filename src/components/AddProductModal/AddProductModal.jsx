@@ -237,7 +237,7 @@ const AddProductModal = ({ setIsModalActive }) => {
             className="--btn --btn-primary"
             disabled={loading ? true : false}
           >
-            {loading && <img src={spinner} />}
+            {loading && <img src={spinner} width="32" />}
             {loading ? "Saving..." : "Save"}
           </button>
         </form>
