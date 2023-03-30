@@ -7,12 +7,12 @@ import { GoogleAuthProvider } from "firebase/auth";
 
 //firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyBBn_HXwUcMnVc8ljTLSNPOIJTDPkguphE",
-  authDomain: "ecommerce-react-42ee1.firebaseapp.com",
-  projectId: "ecommerce-react-42ee1",
-  storageBucket: "ecommerce-react-42ee1.appspot.com",
-  messagingSenderId: "991904800582",
-  appId: "1:991904800582:web:28d0a4373468f744cb4f47",
+  apiKey: "AIzaSyDkaU4DBxLKBgguLn0XF8G4kgP0YnuBy-I",
+  authDomain: "ecommerce-21426-42695.firebaseapp.com",
+  projectId: "ecommerce-21426",
+  storageBucket: "ecommerce-21426.appspot.com",
+  messagingSenderId: "769839043306",
+  appId: "1:769839043306:web:ee856972c44743f29a7d93",
 };
 
 // Initialize Firebase

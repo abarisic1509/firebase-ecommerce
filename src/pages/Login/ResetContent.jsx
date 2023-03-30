@@ -5,9 +5,8 @@ import resetImg from "../../assets/forgot.png";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { auth, googleProvider } from "../../firebase/config";
+import { auth } from "../../firebase/config";
 import { Loader } from "../../components";
-import { useNavigate } from "react-router-dom";
 
 const ResetContent = ({ setCurrentScreen }) => {
   const [email, setEmail] = useState("");

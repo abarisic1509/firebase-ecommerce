@@ -7,8 +7,10 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../firebase/config";
 import { Loader } from "../../components";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setActiveUser } from "../../redux/features/authSlice";
 
-const RegistrationContent = ({ setCurrentScreen, setIsLoggedIn }) => {
+const RegistrationContent = ({ setCurrentScreen }) => {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,6 +18,7 @@ const RegistrationContent = ({ setCurrentScreen, setIsLoggedIn }) => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,11 +33,18 @@ const RegistrationContent = ({ setCurrentScreen, setIsLoggedIn }) => {
         // Signed in
         const user = userCredential.user;
         console.log(auth.currentUser);
+
         updateProfile(user, {
           displayName: displayName,
         })
           .then(() => {
-            setIsLoggedIn(true);
+            dispatch(
+              setActiveUser({
+                userEmail: user.email,
+                userName: user.displayName,
+                userId: user.uid,
+              })
+            );
             setLoading(false);
             toast.success("Registration successfull");
             navigate("/");
