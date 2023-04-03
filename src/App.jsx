@@ -1,18 +1,36 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase/config";
+import { auth, firestore } from "./firebase/config";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./App.scss";
 import { AdminOnlyRoute, Footer, Header } from "./components";
 import { Admin, Cart, Contact, Home, Login, Orders } from "./pages";
 import { removeActiveUser, setActiveUser } from "./redux/features/authSlice";
+import { storeProduct } from "./redux/features/productSlice";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 
 function App() {
   const dispatch = useDispatch();
-  const userEmail = useSelector((state) => state.auth.userEmail);
+  const [loading, setLoading] = useState(false);
 
+  //get data
+  useEffect(() => {
+    let isDataFetching = true;
+    setLoading(true);
+
+    if (isDataFetching) {
+      getData();
+    }
+    setLoading(false);
+
+    return () => {
+      isDataFetching = false;
+    };
+  }, [dispatch]);
+
+  //check auth
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -29,8 +47,30 @@ function App() {
     });
   }, []);
 
+  const getData = async () => {
+    try {
+      const productsRef = collection(firestore, "products");
+      const q = query(productsRef, orderBy("createdAt", "desc"));
+
+      const querySnapshot = await getDocs(q);
+      const allProducts = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        //const { createdAt, ...product } = data; // remove createdAt property
+        return {
+          id: doc.id,
+          ...data,
+        };
+      });
+      dispatch(storeProduct({ allProducts }));
+    } catch (err) {
+      toast.error("Something went wrong, please refresh the page");
+      console.log(err);
+    }
+  };
+
   return (
     <BrowserRouter>
+      {loading && <Loader />}
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -42,7 +82,7 @@ function App() {
           element={
             <AdminOnlyRoute>
               {" "}
-              <Admin />
+              <Admin getData={getData} />
             </AdminOnlyRoute>
           }
         />

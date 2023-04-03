@@ -6,14 +6,14 @@ import Dashboard from "./Dashboard/Dashboard";
 import Products from "./Products/Products";
 import SideNav from "./SideNav/SideNav";
 
-const Admin = () => {
+const Admin = ({ getData }) => {
   return (
     <div className={styles.admin}>
       <SideNav />
       <main className={styles.content}>
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/products" element={<Products />} />
+          <Route path="/products" element={<Products getData={getData} />} />
           <Route path="/orders" element={<Orders />} />
         </Routes>
       </main>

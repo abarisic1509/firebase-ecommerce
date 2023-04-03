@@ -1,12 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  collection,
-  query,
-  getDocs,
-  orderBy,
-  doc,
-  deleteDoc,
-} from "firebase/firestore";
+import React, { useState } from "react";
+import { doc, deleteDoc } from "firebase/firestore";
 import { Loader, ProductModal } from "../../../components";
 
 import styles from "./Products.module.scss";
@@ -16,55 +9,17 @@ import "react-toastify/dist/ReactToastify.css";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { deleteObject, ref } from "firebase/storage";
 import { Confirm } from "notiflix/build/notiflix-confirm-aio";
-import { useDispatch, useSelector } from "react-redux";
-import { storeProduct } from "../../../redux/features/productSlice";
+import { useSelector } from "react-redux";
 
-const Products = () => {
+const Products = ({ getData }) => {
   const [isModalActive, setIsModalActive] = useState(false);
   const [modalAction, setModalAction] = useState("");
   const [editingProductId, setEditingProductId] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const dispatch = useDispatch();
   const productsData = useSelector((state) => state.product.products);
 
-  useEffect(() => {
-    let isDataFetching = true;
-    setLoading(true);
-
-    if (isDataFetching) {
-      getData();
-    }
-    setLoading(false);
-
-    return () => {
-      isDataFetching = false;
-    };
-  }, []);
-
-  const getData = async () => {
-    try {
-      const productsRef = collection(firestore, "products");
-      const q = query(productsRef, orderBy("createdAt", "desc"));
-
-      const querySnapshot = await getDocs(q);
-      const allProducts = querySnapshot.docs.map((doc) => {
-        const data = doc.data();
-        //const { createdAt, ...product } = data; // remove createdAt property
-        return {
-          id: doc.id,
-          ...data,
-        };
-      });
-      dispatch(storeProduct({ allProducts }));
-    } catch (err) {
-      toast.error("Something went wrong, please refresh the page");
-      console.log(err);
-    }
-  };
-
   const deleteProduct = (id, imgUrl) => {
-    console.log(id, imgUrl);
+    //console.log(id, imgUrl);
     try {
       deleteDoc(doc(firestore, "products", id));
 
@@ -107,10 +62,9 @@ const Products = () => {
     setEditingProductId(id);
   };
 
-  console.log(productsData);
+  // console.log(productsData);
   return (
     <div className={styles.products}>
-      {loading && <Loader />}
       <ToastContainer />
 
       <div className={styles.table}>
