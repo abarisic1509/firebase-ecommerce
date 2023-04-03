@@ -5,11 +5,12 @@ import { auth, firestore } from "./firebase/config";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./App.scss";
-import { AdminOnlyRoute, Footer, Header } from "./components";
+import { AdminOnlyRoute, Footer, Header, Loader } from "./components";
 import { Admin, Cart, Contact, Home, Login, Orders } from "./pages";
 import { removeActiveUser, setActiveUser } from "./redux/features/authSlice";
 import { storeProduct } from "./redux/features/productSlice";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import ProductDetails from "./components/Product/ProductDetails/ProductDetails";
 
 function App() {
   const dispatch = useDispatch();
@@ -18,12 +19,10 @@ function App() {
   //get data
   useEffect(() => {
     let isDataFetching = true;
-    setLoading(true);
 
     if (isDataFetching) {
       getData();
     }
-    setLoading(false);
 
     return () => {
       isDataFetching = false;
@@ -48,6 +47,7 @@ function App() {
   }, []);
 
   const getData = async () => {
+    setLoading(true);
     try {
       const productsRef = collection(firestore, "products");
       const q = query(productsRef, orderBy("createdAt", "desc"));
@@ -65,6 +65,8 @@ function App() {
     } catch (err) {
       toast.error("Something went wrong, please refresh the page");
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,6 +89,7 @@ function App() {
           }
         />
         <Route path="/login" element={<Login />} />
+        <Route path="/product-details/:id" element={<ProductDetails />} />
       </Routes>
       <Footer />
     </BrowserRouter>

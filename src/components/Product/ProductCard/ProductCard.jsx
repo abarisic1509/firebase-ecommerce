@@ -1,9 +1,11 @@
 import React from "react";
 
 import styles from "./ProductCard.module.scss";
+import { Link } from "react-router-dom";
 
 const ProductCard = ({
   name,
+  id,
   category,
   brand,
   description,
@@ -20,7 +22,10 @@ const ProductCard = ({
   };
 
   return (
-    <div className={grid ? `${styles.grid}` : `${styles.list}`}>
+    <Link
+      to={`/product-details/${id}`}
+      className={grid ? `${styles.grid}` : `${styles.list}`}
+    >
       <div className={styles.img}>
         {" "}
         <img src={imgUrl} alt={name} />
@@ -37,7 +42,7 @@ const ProductCard = ({
         </div>
         <button className="--btn --btn-danger">Add to cart</button>
       </div>
-    </div>
+    </Link>
   );
 };
 
