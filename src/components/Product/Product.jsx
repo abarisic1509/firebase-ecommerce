@@ -3,8 +3,11 @@ import ProductNav from "./ProductNav/ProductNav";
 import ProductList from "./ProductList/ProductList";
 
 import styles from "./Product.module.scss";
+import { useSelector } from "react-redux";
 
 const Product = () => {
+  const productsData = useSelector((state) => state.product.products);
+
   return (
     <section>
       <div className={`container ${styles.product}`}>
@@ -12,7 +15,7 @@ const Product = () => {
           <ProductNav />
         </aside>
         <div className={styles.content}>
-          <ProductList />
+          <ProductList productsData={productsData} />
         </div>
       </div>
     </section>
