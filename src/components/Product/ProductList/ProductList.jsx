@@ -4,9 +4,11 @@ import { FaListAlt } from "react-icons/fa";
 import ProductCard from "../ProductCard/ProductCard";
 
 import styles from "./ProductList.module.scss";
+import Search from "../../Search/Search";
 
 const ProductList = ({ productsData }) => {
   const [grid, setGrid] = useState(true);
+  const [search, setSearch] = useState("");
   return (
     <div className={styles["product-list"]}>
       <div className={styles.top}>
@@ -23,7 +25,7 @@ const ProductList = ({ productsData }) => {
           </p>
         </div>
         <div>
-          <p>Search</p>
+          <Search value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
         <div className={styles.sort}>
           <label htmlFor="sortOpt">Sort by</label>
