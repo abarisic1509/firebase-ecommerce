@@ -12,7 +12,7 @@ const Product = () => {
     <section id="products">
       <div className={`container ${styles.product}`}>
         <aside className={styles.filter}>
-          <ProductNav />
+          <ProductNav productsData={productsData} />
         </aside>
         <div className={styles.content}>
           <ProductList productsData={productsData} />
