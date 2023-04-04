@@ -9,7 +9,7 @@ const Product = () => {
   const productsData = useSelector((state) => state.product.products);
 
   return (
-    <section>
+    <section id="products">
       <div className={`container ${styles.product}`}>
         <aside className={styles.filter}>
           <ProductNav />
