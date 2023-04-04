@@ -7,19 +7,28 @@ import ProductCard from "../ProductCard/ProductCard";
 import styles from "./ProductList.module.scss";
 import Search from "../../Search/Search";
 import { useEffect } from "react";
-import { filterBySearch } from "../../../redux/features/filterSlice";
+import {
+  filterBySearch,
+  filterBySort,
+} from "../../../redux/features/filterSlice";
 
 const ProductList = ({ productsData }) => {
   const dispatch = useDispatch();
+  const [grid, setGrid] = useState(true);
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("latest");
+
+  //console.log(productsData);
+
   const filteredProducts = useSelector(
     (state) => state.filters.filteredProducts
   );
-  const [grid, setGrid] = useState(true);
-  const [search, setSearch] = useState("");
-
   useEffect(() => {
     dispatch(filterBySearch({ productsData, search }));
-  }, [search, dispatch]);
+  }, [search, dispatch, productsData]);
+  useEffect(() => {
+    dispatch(filterBySort({ productsData, sort }));
+  }, [sort, dispatch, productsData]);
 
   return (
     <div className={styles["product-list"]}>
@@ -33,7 +42,7 @@ const ProductList = ({ productsData }) => {
           <FaListAlt size={22} color="#0066d4" onClick={() => setGrid(false)} />
 
           <p>
-            <b>{filteredProducts.lenght}</b> products found
+            <b>{filteredProducts.length}</b> products found
           </p>
         </div>
         <div>
@@ -41,7 +50,12 @@ const ProductList = ({ productsData }) => {
         </div>
         <div className={styles.sort}>
           <label htmlFor="sortOpt">Sort by</label>
-          <select name="sortOpt" id="sortOpt">
+          <select
+            name="sortOpt"
+            id="sortOpt"
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+          >
             <option value="latest">Latest</option>
             <option value="low-to-high">Price: low to high</option>
             <option value="high-to-low">Price: high to low</option>

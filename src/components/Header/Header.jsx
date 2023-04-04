@@ -72,7 +72,7 @@ const Header = () => {
         toast.error(error.message);
       });
   };
-  console.log(userName);
+  //console.log(userName);
   return (
     <header>
       <ToastContainer />
