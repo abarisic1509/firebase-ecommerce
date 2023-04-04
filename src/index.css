@@ -486,3 +486,7 @@ button {
   flex-direction: column;
   gap: 0.75rem;
 }
+
+select {
+  background-color: transparent;
+}
