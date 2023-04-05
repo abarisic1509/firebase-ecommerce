@@ -3,14 +3,20 @@ import { useDispatch, useSelector } from "react-redux";
 
 import styles from "./ProductNav.module.scss";
 import {
-  filterByBrand,
-  filterByCategory,
+  //filterByBrand,
+  //filterByCategory,
+  setFilterByBrand,
+  setFilterByCategory,
 } from "../../../redux/features/filterSlice";
 
 const ProductNav = ({ productsData }) => {
   const dispatch = useDispatch();
-  const [category, setCategory] = useState("All");
-  const [brand, setBrand] = useState("All");
+  const filterByCategory = useSelector(
+    (state) => state.filters.filterByCategory
+  );
+  const filterByBrand = useSelector((state) => state.filters.filterByBrand);
+  //const [category, setCategory] = useState("All");
+  //const [brand, setBrand] = useState("All");
 
   const allCategories = [
     "All",
@@ -20,22 +26,22 @@ const ProductNav = ({ productsData }) => {
     "All",
     ...new Set(productsData.map((product) => product.brand)),
   ];
+  console.log(filterByBrand, filterByCategory);
+  // useEffect(() => {
+  //   dispatch(filterByCategory({ productsData, category }));
+  // }, [dispatch, productsData, category]);
+  // useEffect(() => {
+  //   dispatch(filterByBrand({ productsData, brand }));
+  // }, [dispatch, productsData, brand]);
 
-  useEffect(() => {
-    dispatch(filterByCategory({ productsData, category }));
-  }, [dispatch, productsData, category]);
-  useEffect(() => {
-    dispatch(filterByBrand({ productsData, brand }));
-  }, [dispatch, productsData, brand]);
-
-  console.log(allCategories);
+  //console.log(allCategories);
 
   return (
     <div className={styles.filter}>
       <h4>Categories</h4>
       <div className={styles.category}>
         {allCategories.map((cat, i) => (
-          <button key={i} onClick={() => setCategory(cat)}>
+          <button key={i} onClick={() => dispatch(setFilterByCategory(cat))}>
             {cat}
           </button>
         ))}
@@ -45,8 +51,8 @@ const ProductNav = ({ productsData }) => {
         <select
           name="brand"
           id="brand"
-          value={brand}
-          onChange={(e) => setBrand(e.target.value)}
+          value={filterByBrand}
+          onChange={(e) => dispatch(setFilterByBrand(e.target.value))}
         >
           {allBrands.map((item, i) => (
             <option key={i} value={item}>
