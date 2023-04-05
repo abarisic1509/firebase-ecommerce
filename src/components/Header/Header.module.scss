@@ -93,7 +93,7 @@ header {
     li {
       width: 100%;
       display: grid;
-      grid-template-columns: 1fr auto auto;
+      grid-template-columns: 1fr 20px 40px;
       gap: 1.5rem;
     }
     h3 {
@@ -107,6 +107,14 @@ header {
     }
     p {
       font-size: 1.125rem;
+
+      &:first-of-type {
+        font-weight: 600;
+        text-align: center;
+      }
+      &:last-of-type {
+        text-align: right;
+      }
     }
 
     a {
