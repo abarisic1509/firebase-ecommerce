@@ -91,7 +91,7 @@ const ProductList = ({ productsData }) => {
           <>
             {currentProducts.map((product) => (
               <div key={product.id}>
-                <ProductCard {...product} grid={grid} />
+                <ProductCard product={product} grid={grid} />
               </div>
             ))}
           </>

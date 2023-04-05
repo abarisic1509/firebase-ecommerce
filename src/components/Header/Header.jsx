@@ -31,6 +31,10 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const cartItems = useSelector((state) => state.cart.cartItems);
+
+  console.log(cartItems);
+
   useEffect(() => {
     if (!isMouseHovering) {
       // Start the timer to close the dropdown only when the mouse is not hovering
@@ -140,7 +144,7 @@ const Header = () => {
                   >
                     <FaShoppingCart size={32} />
 
-                    <p>0</p>
+                    <p>{cartItems.length}</p>
                   </button>
                   <div
                     className={
@@ -151,23 +155,13 @@ const Header = () => {
                     onMouseLeave={hideDropdownMenu}
                   >
                     <ul>
-                      <li>
-                        <h3>Item title</h3>
-                        <p>x2</p>
-                        <p>30,00€</p>
-                      </li>
-                      <li>
-                        <h3>A bit longer item title</h3>
-                        <p>x2</p>
-                        <p>30,00€</p>
-                      </li>
-                      <li>
-                        <h3>
-                          Very, very, very long item title with lots of chars
-                        </h3>
-                        <p>x2</p>
-                        <p>30,00€</p>
-                      </li>
+                      {cartItems.map((item) => (
+                        <li key={item.id}>
+                          <h3>{item.name}</h3>
+                          <p>x{item.count}</p>
+                          <p>${item.price * item.count}</p>
+                        </li>
+                      ))}
                     </ul>
                     <Link to="/cart" onClick={handleClickOnLink}>
                       Go to cart
@@ -267,7 +261,7 @@ const Header = () => {
               >
                 <FaShoppingCart size={32} />
 
-                <p>0</p>
+                <p>{cartItems.length}</p>
               </button>
               <div
                 className={
@@ -278,21 +272,13 @@ const Header = () => {
                 onMouseLeave={hideDropdownMenu}
               >
                 <ul>
-                  <li>
-                    <h3>Item title</h3>
-                    <p>x2</p>
-                    <p>30,00€</p>
-                  </li>
-                  <li>
-                    <h3>A bit longer item title</h3>
-                    <p>x2</p>
-                    <p>30,00€</p>
-                  </li>
-                  <li>
-                    <h3>Very, very, very long item title with lots of chars</h3>
-                    <p>x2</p>
-                    <p>30,00€</p>
-                  </li>
+                  {cartItems.map((item) => (
+                    <li key={item.id}>
+                      <h3>{item.name}</h3>
+                      <p>x{item.count}</p>
+                      <p>${item.price * item.count}</p>
+                    </li>
+                  ))}
                 </ul>
                 <Link to="/cart" onClick={handleClickOnLink}>
                   Go to cart

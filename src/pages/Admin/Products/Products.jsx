@@ -51,7 +51,6 @@ const Products = ({ getData }) => {
         borderRadius: "8px",
         titleColor: "orangered",
         okButtonBackground: "orangered",
-        // etc...
       }
     );
   };

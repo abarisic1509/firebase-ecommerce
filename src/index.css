@@ -444,6 +444,7 @@ button {
 /* Dropdown menus */
 .dropdown-wrapper {
   position: relative;
+  z-index: 9;
 }
 .dropdown-wrapper .dropdown-btn {
   display: flex;
