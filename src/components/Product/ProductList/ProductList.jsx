@@ -8,8 +8,6 @@ import styles from "./ProductList.module.scss";
 import Search from "../../Search/Search";
 import { useEffect } from "react";
 import {
-  //filterBySearch,
-  //filterBySort,
   filterProducts,
   setSearchTerm,
   setSortBy,
@@ -17,24 +15,13 @@ import {
 
 const ProductList = ({ productsData }) => {
   const dispatch = useDispatch();
-  const { searchTerm, sortBy, filterByCategory, filterByBrand } = useSelector(
-    (state) => state.filters
-  );
+  const { searchTerm, sortBy, filterByCategory, filterByBrand, priceRange } =
+    useSelector((state) => state.filters);
   const [grid, setGrid] = useState(true);
-  //const [search, setSearch] = useState("");
-  //const [sort, setSort] = useState("latest");
 
   const filteredProducts = useSelector(
     (state) => state.filters.filteredProducts
   );
-  // console.log(filteredProducts, searchTerm, sortBy);
-
-  // useEffect(() => {
-  //   dispatch(filterBySearch({ productsData, search }));
-  // }, [search, dispatch, productsData]);
-  // useEffect(() => {
-  //   dispatch(filterBySort({ productsData, sort }));
-  // }, [sort, dispatch, productsData]);
   useEffect(() => {
     dispatch(filterProducts({ productsData }));
   }, [
@@ -44,7 +31,10 @@ const ProductList = ({ productsData }) => {
     sortBy,
     filterByCategory,
     filterByBrand,
+    priceRange,
   ]);
+
+  //console.log(filteredProducts);
 
   return (
     <div className={styles["product-list"]}>

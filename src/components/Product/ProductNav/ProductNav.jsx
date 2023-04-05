@@ -7,16 +7,16 @@ import {
   //filterByCategory,
   setFilterByBrand,
   setFilterByCategory,
+  setPriceRange,
+  setSearchTerm,
+  setSortBy,
 } from "../../../redux/features/filterSlice";
 
 const ProductNav = ({ productsData }) => {
   const dispatch = useDispatch();
-  const filterByCategory = useSelector(
-    (state) => state.filters.filterByCategory
-  );
+
   const filterByBrand = useSelector((state) => state.filters.filterByBrand);
-  //const [category, setCategory] = useState("All");
-  //const [brand, setBrand] = useState("All");
+  const priceRange = useSelector((state) => state.filters.priceRange);
 
   const allCategories = [
     "All",
@@ -26,16 +26,16 @@ const ProductNav = ({ productsData }) => {
     "All",
     ...new Set(productsData.map((product) => product.brand)),
   ];
-  console.log(filterByBrand, filterByCategory);
-  // useEffect(() => {
-  //   dispatch(filterByCategory({ productsData, category }));
-  // }, [dispatch, productsData, category]);
-  // useEffect(() => {
-  //   dispatch(filterByBrand({ productsData, brand }));
-  // }, [dispatch, productsData, brand]);
 
-  //console.log(allCategories);
+  const clearFilters = () => {
+    dispatch(setSearchTerm(""));
+    dispatch(setFilterByCategory("All"));
+    dispatch(setFilterByBrand("All"));
+    dispatch(setPriceRange([0, 10000]));
+    dispatch(setSortBy("latest"));
+  };
 
+  //console.log(priceRange);
   return (
     <div className={styles.filter}>
       <h4>Categories</h4>
@@ -62,12 +62,22 @@ const ProductNav = ({ productsData }) => {
         </select>
       </div>
       <h4>Price</h4>
-      <p>1000</p>
+      <p>${priceRange[1]}</p>
       <div className={styles.price}>
-        <input type="range" name="price" id="price" min={100} max={10000} />
+        <input
+          type="range"
+          name="price"
+          id="price"
+          min={0}
+          max={10000}
+          value={priceRange[1]}
+          onChange={(e) => dispatch(setPriceRange([0, Number(e.target.value)]))}
+        />
       </div>
       <br />
-      <button className="--btn --btn-danger">Clear filters</button>
+      <button className="--btn --btn-danger" onClick={clearFilters}>
+        Clear filters
+      </button>
     </div>
   );
 };
