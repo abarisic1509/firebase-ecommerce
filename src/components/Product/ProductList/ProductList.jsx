@@ -12,6 +12,7 @@ import {
   setSearchTerm,
   setSortBy,
 } from "../../../redux/features/filterSlice";
+import Pagination from "../../Pagination/Pagination";
 
 const ProductList = ({ productsData }) => {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const ProductList = ({ productsData }) => {
   const filteredProducts = useSelector(
     (state) => state.filters.filteredProducts
   );
+
   useEffect(() => {
     dispatch(filterProducts({ productsData }));
   }, [
@@ -34,7 +36,15 @@ const ProductList = ({ productsData }) => {
     priceRange,
   ]);
 
-  //console.log(filteredProducts);
+  //Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage, setProductsPerPage] = useState(12);
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
 
   return (
     <div className={styles["product-list"]}>
@@ -79,7 +89,7 @@ const ProductList = ({ productsData }) => {
           <p>No products found</p>
         ) : (
           <>
-            {filteredProducts.map((product) => (
+            {currentProducts.map((product) => (
               <div key={product.id}>
                 <ProductCard {...product} grid={grid} />
               </div>
@@ -87,6 +97,13 @@ const ProductList = ({ productsData }) => {
           </>
         )}
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        productsPerPage={productsPerPage}
+        totalProducts={filteredProducts.length}
+      />
     </div>
   );
 };

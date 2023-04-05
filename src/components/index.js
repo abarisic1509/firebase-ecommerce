@@ -5,3 +5,4 @@ export { default as AdminOnlyRoute } from "./AdminOnlyRoute/AdminOnlyRoute";
 export { default as ProductModal } from "./ProductModal/ProductModal";
 export { default as Product } from "./Product/Product";
 export { default as Search } from "./Search/Search";
+export { default as Pagination } from "./Pagination/Pagination";
