@@ -46,6 +46,11 @@
 
     .card {
       padding: 1rem;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      box-shadow: var(--box-shadow);
+      overflow: hidden;
+      margin: 1rem 0;
       .text {
         display: flex;
         justify-content: space-between;
@@ -63,8 +68,12 @@
 .count {
   display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   button {
-    border: 1px solid var(--darkblue);
+    width: 2rem;
+    height: 2rem;
+    background-color: rgba(0, 0, 0, 0.2);
   }
   & > * {
     margin-right: 1rem;
