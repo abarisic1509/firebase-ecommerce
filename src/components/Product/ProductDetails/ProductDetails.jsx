@@ -6,8 +6,11 @@ import { firestore } from "../../../firebase/config";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../Loader/Loader";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../../redux/features/cartSlice";
 
 const ProductDetails = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [count, setCount] = useState(1);
@@ -70,11 +73,11 @@ const ProductDetails = () => {
               <p className={styles.price}>${product.price}</p>
               <p>{product.description}</p>
               <p>
-                <b>SKU</b>
+                <b>SKU: </b>
                 {product.id}
               </p>
               <p>
-                <b>Brand</b>
+                <b>Brand: </b>
                 {product.brand}
               </p>
               <div className={styles.count}>
@@ -88,7 +91,12 @@ const ProductDetails = () => {
                   +
                 </button>
               </div>
-              <button className="--btn --btn-danger">ADD TO CART</button>
+              <button
+                className="--btn --btn-danger"
+                onClick={() => dispatch(addToCart({ ...product, count }))}
+              >
+                ADD TO CART
+              </button>
             </div>
           </div>
         )}
