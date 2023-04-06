@@ -16,7 +16,10 @@ const Cart = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalQuantity = cartItems.reduce((acc, item) => acc + item.count, 0);
-  const totalPrice = cartItems.reduce((acc, item) => acc + item.price, 0);
+  const totalPrice = cartItems.reduce(
+    (acc, item) => acc + item.price * item.count,
+    0
+  );
 
   console.log(cartItems);
   return (
