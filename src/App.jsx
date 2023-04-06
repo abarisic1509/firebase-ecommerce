@@ -5,8 +5,14 @@ import { auth, firestore } from "./firebase/config";
 import { useDispatch, useSelector } from "react-redux";
 
 import "./App.scss";
-import { AdminOnlyRoute, Footer, Header, Loader } from "./components";
-import { Admin, Cart, Contact, Home, Login, Orders } from "./pages";
+import {
+  AdminOnlyRoute,
+  Footer,
+  Header,
+  Loader,
+  LoggedInOnlyRoute,
+} from "./components";
+import { Admin, Cart, Checkout, Contact, Home, Login, Orders } from "./pages";
 import { removeActiveUser, setActiveUser } from "./redux/features/authSlice";
 import { storeProduct } from "./redux/features/productSlice";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
@@ -83,9 +89,16 @@ function App() {
           path="/admin/*"
           element={
             <AdminOnlyRoute>
-              {" "}
               <Admin getData={getData} />
             </AdminOnlyRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <LoggedInOnlyRoute>
+              <Checkout />
+            </LoggedInOnlyRoute>
           }
         />
         <Route path="/login" element={<Login />} />

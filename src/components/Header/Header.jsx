@@ -8,7 +8,10 @@ import { auth } from "../../firebase/config";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
-import { removeActiveUser } from "../../redux/features/authSlice";
+import {
+  removeActiveUser,
+  setRedirectPath,
+} from "../../redux/features/authSlice";
 
 const logo = (
   <div className={styles.logo}>
@@ -33,7 +36,7 @@ const Header = () => {
 
   const cartItems = useSelector((state) => state.cart.cartItems);
 
-  console.log(cartItems);
+  //console.log(cartItems);
 
   useEffect(() => {
     if (!isMouseHovering) {
@@ -175,6 +178,7 @@ const Header = () => {
                       className={({ isActive }) =>
                         isActive ? `${styles.active}` : ""
                       }
+                      onClick={() => dispatch(setRedirectPath("/"))}
                     >
                       Login
                     </NavLink>
@@ -292,6 +296,7 @@ const Header = () => {
                   className={({ isActive }) =>
                     isActive ? `${styles.active}` : ""
                   }
+                  onClick={() => dispatch(setRedirectPath("/"))}
                 >
                   Login
                 </NavLink>

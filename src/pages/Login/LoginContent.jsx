@@ -9,7 +9,7 @@ import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../../firebase/config";
 import { Loader } from "../../components";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setActiveUser } from "../../redux/features/authSlice";
 
 const LoginContent = ({ setCurrentScreen }) => {
@@ -19,6 +19,8 @@ const LoginContent = ({ setCurrentScreen }) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const redirectPath = useSelector((state) => state.auth.redirectPath);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,7 +39,7 @@ const LoginContent = ({ setCurrentScreen }) => {
           })
         );
         setLoading(false);
-        navigate("/");
+        navigate(redirectPath);
       })
       .catch((error) => {
         console.log(error);
@@ -60,7 +62,7 @@ const LoginContent = ({ setCurrentScreen }) => {
           })
         );
         setLoading(false);
-        navigate("/");
+        navigate(redirectPath);
       })
       .catch((error) => {
         console.log(error);

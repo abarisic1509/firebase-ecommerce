@@ -7,7 +7,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../firebase/config";
 import { Loader } from "../../components";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setActiveUser } from "../../redux/features/authSlice";
 
 const RegistrationContent = ({ setCurrentScreen }) => {
@@ -19,6 +19,8 @@ const RegistrationContent = ({ setCurrentScreen }) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const redirectPath = useSelector((state) => state.auth.redirectPath);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -47,7 +49,7 @@ const RegistrationContent = ({ setCurrentScreen }) => {
             );
             setLoading(false);
             toast.success("Registration successfull");
-            navigate("/");
+            navigate(redirectPath);
           })
           .catch((error) => {
             toast.error(error.message);

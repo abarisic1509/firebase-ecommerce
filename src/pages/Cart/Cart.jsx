@@ -10,10 +10,14 @@ import {
   deleteFromCart,
   increaseCount,
 } from "../../redux/features/cartSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { setRedirectPath } from "../../redux/features/authSlice";
 
 const Cart = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalQuantity = cartItems.reduce((acc, item) => acc + item.count, 0);
   const totalPrice = cartItems.reduce(
@@ -21,7 +25,15 @@ const Cart = () => {
     0
   );
 
-  console.log(cartItems);
+  const handleCheckout = () => {
+    if (!isLoggedIn) {
+      dispatch(setRedirectPath("/checkout"));
+      navigate("/login");
+    } else {
+      navigate("/checkout");
+    }
+  };
+  //console.log(cartItems);
   return (
     <section>
       <div className={`container ${styles.table}`}>
@@ -109,6 +121,7 @@ const Cart = () => {
                   <p>Taxes and shipping calculated at checkout</p>
                 </div>
                 <button
+                  onClick={handleCheckout}
                   className="--btn --btn-primary"
                   style={{ marginTop: "1rem" }}
                 >

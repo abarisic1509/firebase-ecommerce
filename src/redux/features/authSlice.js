@@ -5,6 +5,7 @@ const initialState = {
   userEmail: null,
   userName: null,
   userId: null,
+  redirectPath: null,
 };
 
 const authSlice = createSlice({
@@ -24,9 +25,13 @@ const authSlice = createSlice({
       state.userName = null;
       state.userId = null;
     },
+    setRedirectPath: (state, action) => {
+      state.redirectPath = action.payload;
+    },
   },
 });
 
-export const { setActiveUser, removeActiveUser } = authSlice.actions;
+export const { setActiveUser, removeActiveUser, setRedirectPath } =
+  authSlice.actions;
 
 export default authSlice.reducer;
